@@ -9,7 +9,6 @@
 > 浏览器主题可定制，配置简单，实现了简单的网页浏览器功能。
  
 
-**百度云下载：**
 
 
 
@@ -41,6 +40,6 @@ npm run build
 
 `build/win-unpacked` 文件夹为免安装可执行文件；
 
-`build/electron-browser Setup 0.0.0.exe` 为安装文件。
+`build/*.exe` 为安装文件。
 
 软件运行配置说明请看 [config.md](config.md)
