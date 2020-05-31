@@ -1,0 +1,10 @@
+ let ajax = new XMLHttpRequest()
+            ajax.onreadystatechange = function () {
+              if (ajax.status > 200 && ajax.status < 400) {
+                that.$root.webview && that.$root.webview.loadURL(this.$config.APP_URL)
+              } else {
+                alert('bukeyong----------------')
+              }
+            }
+            ajax.open('get', this.$config.APP_URL, false)
+            ajax.send(null)
