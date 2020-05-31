@@ -42,4 +42,4 @@ npm run build
 
 `build/*.exe` 为安装文件。
 
-软件运行配置说明请看 [config.md](config.md)
+
