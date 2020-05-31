@@ -1,7 +1,7 @@
 # Electron-Browser
 
 
-![Electron-Browser](build/icons/256x256.png)
+
 
 
 
@@ -11,12 +11,6 @@
 
 **百度云下载：**
 
-链接: https://pan.baidu.com/s/1nxh2nBb 密码: 77mq
-
-
-![Electron-Browser](20171218164524.png)
-
-![Electron-Browser](20171218164831.png)
 
 
 
