@@ -9,10 +9,7 @@ import '@/assets/scrollbar.css'
 
 import App from './App'
 import router from './router'
-
 import MCenterLayout from '@/components/center-layout'
-// window.remote = remote
-// window.win = remote.getCurrentWindow()
 
 Vue.use(ElementUI)
 Vue.use(MCenterLayout)

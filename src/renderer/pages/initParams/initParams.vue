@@ -37,6 +37,7 @@
       },
       mounted () {
         var win = this.currentWindow()
+    
         win.unmaximize()
       }
     }

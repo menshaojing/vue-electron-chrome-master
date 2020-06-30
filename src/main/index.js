@@ -12,13 +12,16 @@ const config = {
   APP_NAME: '干部监督大数据智慧平台',
   // 应用地址
   // APP_URL: 'http://11.49.186.46:8080/ecpweb/page/eism/menu/menunav.jsp',
-  APP_URL: 'http://11.49.186.46:8080/ecpweb/page/eism/menu/menunav.jsp',
+  APP_URL: 'http://localhost:8082/ecpweb/page/eism/menu/menunav.jsp',
   APP_URL_LIST: [{
     url: 'http://128.196.200.34:8080/ecpweb/page/eism/menu/menunav.jsp',
     label: '干部智慧监督平台-VT'
   }, {
     url: 'http://128.196.119.182:8101/ecpweb/page/eism/menu/menunav.jsp',
     label: '干部智慧监督平台-PL4'
+  }, {
+    url: 'http://localhost:8082/ecpweb/page/eism/menu/menunav.jsp',
+    label: '干部智慧监督平台-本地'
   }],
 
   // 应用标题
@@ -64,7 +67,7 @@ const config = {
   skipTaskbar: false,
 
   // 跳过缓存开启reloadIgnoringCache()
-  ignoringCache: false,
+  ignoringCache: true,
 
   // 窗口 https://electronjs.org/docs/api/browser-window
   other: {
