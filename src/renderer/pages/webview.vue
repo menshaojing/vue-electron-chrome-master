@@ -7,7 +7,7 @@
         <app-info></app-info>
       </m-center-layout-item>
     </m-center-layout>
-  <webview :src="src" v-else class="webview" ref="webview" allowpopups></webview>
+  <webview :src="src"  v-else class="webview" nodeIntegration  ref="webview"  allowpopups></webview>
 </div>
 </template>
 <script>
@@ -84,9 +84,7 @@ export default {
         that.$router.push(that.initParams)
       } else {
         let win = that.currentWindow()
-        if (!win.isMaximized()) {
-          win.maximize()
-        }
+        win.maximize()
       }
     }
   },
@@ -94,6 +92,7 @@ export default {
     this.checkParamsRedirect()
   },
   mounted () {
+    window.currentWindow = this.currentWindow()
     this.$root.webview = this.webview = this.$refs['webview']
     this.init()
     this.webview && this.webview.addEventListener('dom-ready', () => {
