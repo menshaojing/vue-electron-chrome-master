@@ -56,153 +56,155 @@
 </template>
 
 <script>
-    import AppInfo from '@/components/app-info'
-    export default {
-      name: 'vue-electron-chrome',
-      components: {
-        AppInfo
+
+import AppInfo from '@/components/app-info'
+export default {
+  name: 'vue-electron-chrome',
+  components: {
+    AppInfo
+  },
+  data () {
+    return {
+      theme: {
+        titleBarHeight: (this.$config.APP_TITLE_BAR_HEIGHT || 30) + 'px',
+        titleBarBgColor: this.$config.APP_TITLE_BAR_BGCOLOR,
+        titleBarTextColor: this.$config.APP_TITLE_BAR_TEXTCOLOR,
+        footerBarHeight: (this.$config.APP_FOOTER_BAR_HEIGHT || 30) + 'px',
+        windowBorderColor: this.$config.APP_WINDOWN_BORDER_COLOR,
+        windowBorder: this.$config.APP_WINDOWN_BORDER
       },
-      data () {
-        return {
-          theme: {
-            titleBarHeight: (this.$config.APP_TITLE_BAR_HEIGHT || 30) + 'px',
-            titleBarBgColor: this.$config.APP_TITLE_BAR_BGCOLOR,
-            titleBarTextColor: this.$config.APP_TITLE_BAR_TEXTCOLOR,
-            footerBarHeight: (this.$config.APP_FOOTER_BAR_HEIGHT || 30) + 'px',
-            windowBorderColor: this.$config.APP_WINDOWN_BORDER_COLOR,
-            windowBorder: this.$config.APP_WINDOWN_BORDER
-          },
-          hideTitleBar: this.$config.APP_TITLE_BAR_HIDE === 'true',
-          sideWidth: '150px',
-          name: this.$config.APP_NAME,
-          title: this.$config.APP_TITLE,
-          menu: null,
-          showAppInfo: false,
-          filename: null,
-          loading: null
+      hideTitleBar: this.$config.APP_TITLE_BAR_HIDE === 'true',
+      sideWidth: '150px',
+      name: this.$config.APP_NAME,
+      title: this.$config.APP_TITLE,
+      menu: null,
+      showAppInfo: false,
+      filename: null,
+      loading: null
 
-        }
-      },
-      methods: {
-        currentWindow () {
-          return this.$electron.remote.getCurrentWindow()
-        },
-        handleFullScreen () {
-          var win = this.currentWindow()
-          if (win.isFullScreen()) {
-            win.setFullScreen(false)
-          } else {
-            win.setFullScreen(true)
-          }
-        },
-        handleMinimize () {
-          var win = this.currentWindow()
-          win.minimize()
-        },
-        handleMaximize () {
-          var win = this.currentWindow()
-          if (win.isMaximized()) {
-            win.unmaximize()
-          } else {
-            win.maximize()
-          }
-        },
-        clearCache () {
-          var that = this
-          const clearObj = {
-            storages: ['appcache', 'cookies', 'filesystem', 'indexdb', 'localstorage', 'shadercache', 'websql', 'serviceworkers']
-          }
-          var win = this.currentWindow()
-          that.$root.webview.getWebContents().session.clearStorageData(clearObj, () => {
-            that.$root.webview.reload()
-          })
-        },
-        refresh () {
-          var that = this
-          that.$root.webview && that.$root.webview.reload()
-        },
-        goBack () {
-          var that = this
-          that.$root.webview && that.$root.webview.goBack()
-        },
-        handleClose () {
-          var win = this.currentWindow()
-          this.$confirm('你确定要关闭应用吗?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            win.close()
-          }).catch(() => {
-          })
-        },
-        handleShowMenu () {
-          this.menu.popup(this.currentWindow(), 0, 31)
-        },
-        initMenu: function () {
-          var that = this
-          var contextMenu
-          if (that.$config.contextmenu) {
-            var Menu = this.$electron.remote.Menu
-            var contextMenuItem = [
-              {label: '重新加载应用', role: 'reload'},
+    }
+  },
+  methods: {
+    currentWindow () {
+      return this.$electron.remote.getCurrentWindow()
+    },
+    handleFullScreen () {
+      var win = this.currentWindow()
+      if (win.isFullScreen()) {
+        win.setFullScreen(false)
+      } else {
+        win.setFullScreen(true)
+      }
+    },
+    handleMinimize () {
+      var win = this.currentWindow()
+      win.minimize()
+    },
+    handleMaximize () {
+      var win = this.currentWindow()
+      if (win.isMaximized()) {
+        win.unmaximize()
+      } else {
+        win.maximize()
+      }
+    },
+    clearCache () {
+      var that = this
+      const clearObj = {
+        storages: ['appcache', 'cookies', 'filesystem', 'indexdb', 'localstorage', 'shadercache', 'websql', 'serviceworkers']
+      }
+      that.$root.webview.getWebContents().session.clearStorageData(clearObj, () => {
+        that.$root.webview.reload()
+      })
+    },
+    refresh () {
+      var that = this
+      that.$root.webview && that.$root.webview.reload()
+    },
+    goBack () {
+      var that = this
+      that.$root.webview.send('webParent', 'message')
+    },
+    handleClose () {
+      var win = this.currentWindow()
+      this.$confirm('你确定要关闭应用吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        win.close()
+      }).catch(() => {
+      })
+    },
+    handleShowMenu () {
+      this.menu.popup(this.currentWindow(), 0, 31)
+    },
+    initMenu: function () {
+      var that = this
+      var contextMenu
+      if (that.$config.contextmenu) {
+        var Menu = this.$electron.remote.Menu
+        var contextMenuItem = [
+          {label: '重新加载应用', role: 'reload'},
 
-              {label: '强制加载应用', role: 'forcereload'},
-              {label: '应用控制台', role: 'toggledevtools'},
-              {
-                label: '审查元素',
-                click () {
-                  if (that.$root.webview) {
-                    if (that.$root.webview.isDevToolsOpened()) {
-                      that.$root.webview.closeDevTools()
-                    } else {
-                      that.$root.webview.openDevTools()
-                    }
-                  }
-                }
-              },
-
-              {type: 'separator'},
-              {
-                label: '关于',
-                click () {
-                  that.showAppInfo = true
+          {label: '强制加载应用', role: 'forcereload'},
+          {label: '应用控制台', role: 'toggledevtools'},
+          {
+            label: '审查元素',
+            click () {
+              if (that.$root.webview) {
+                if (that.$root.webview.isDevToolsOpened()) {
+                  that.$root.webview.closeDevTools()
+                } else {
+                  that.$root.webview.openDevTools()
                 }
               }
-            ]
+            }
+          },
 
-            contextMenu = Menu.buildFromTemplate(contextMenuItem)
-            Menu.setApplicationMenu(contextMenu)
-            document.addEventListener('contextmenu', (e) => {
-              contextMenu.popup(this.currentWindow(), e.x, e.y)
-            })
+          {type: 'separator'},
+          {
+            label: '关于',
+            click () {
+              that.showAppInfo = true
+            }
           }
-          this.menu = contextMenu
-        }
-      },
-      created () {
-        this.initMenu()
-      },
-      mounted () {
-        var mainWindow = this.currentWindow()
-        mainWindow.webContents.session.on('will-download', (e, item) => {
-          /* // 获取文件的总大小
+        ]
+
+        contextMenu = Menu.buildFromTemplate(contextMenuItem)
+        Menu.setApplicationMenu(contextMenu)
+        document.addEventListener('contextmenu', (e) => {
+          contextMenu.popup(this.currentWindow(), e.x, e.y)
+        })
+      }
+      this.menu = contextMenu
+    }
+  },
+  created () {
+    this.initMenu()
+  },
+  mounted () {
+    let custom = new CustomEvent('test_event', {detail: {e_name: ' this is a test '}})
+    window.eleBack = custom
+    var mainWindow = this.currentWindow()
+    mainWindow.webContents.session.on('will-download', (e, item) => {
+      /* // 获取文件的总大小
           const totalBytes = item.getTotalBytes()
           // 设置文件的保存路径，此时默认弹出的 save dialog 将被覆盖
           const filePath = path.join(app.getPath('downloads'), item.getFilename())
           item.setSavePath(filePath)
       */ // 监听下载过程，计算并设置进度条进度
-          item.on('updated', () => {
-            /* mainWindow.setProgressBar(item.getReceivedBytes() / totalBytes) */
-          })
-          // 监听下载结束事件
-          item.on('done', (e, state) => {
-            this.$notify({
-              title: '提示',
-              message: item.getFilename() + '文件下载成功',
-              position: 'bottom-left'
-            })
-            /*   // 如果窗口还在的话，去掉进度条
+      item.on('updated', () => {
+        /* mainWindow.setProgressBar(item.getReceivedBytes() / totalBytes) */
+      })
+      // 监听下载结束事件
+      item.on('done', (e, state) => {
+        this.$notify({
+          title: '提示',
+          message: item.getFilename() + '文件下载成功',
+          position: 'bottom-left'
+        })
+        /*   // 如果窗口还在的话，去掉进度条
             if (!mainWindow.isDestroyed()) {
               mainWindow.setProgressBar(-1)
             }
@@ -210,16 +212,17 @@
             if (state === 'interrupted') {
               electron.dialog.showErrorBox('下载失败', `文件 ${item.getFilename()} 因为某些原因被中断下载`)
             } */
-            // 下载完成，让 dock 上的下载目录Q弹一下下
-          /*  if (state === 'completed') {
+        // 下载完成，让 dock 上的下载目录Q弹一下下
+        /*  if (state === 'completed') {
                 app.dock.downloadFinished(filePath)
             } */
-          })
-        })
+      })
+    })
   }
 
-    }
+}
 </script>
+
 <style type="text/css">
     #app{
         margin: 0 auto;
