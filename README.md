@@ -1,8 +1,11 @@
 # Electron-Browser
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> dffe4a4... 说明修改
 
 
 > 一个基于Electron开发的应用浏览器，主要用于网页APP全屏模式运行，使WEB应用看起来更像一个原生应用
@@ -40,6 +43,10 @@ npm run build
 
 `build/win-unpacked` 文件夹为免安装可执行文件；
 
+<<<<<<< HEAD
 `build/*.exe` 为安装文件。
+=======
+`build/.exe` 为安装文件。
+>>>>>>> dffe4a4... 说明修改
 
 
